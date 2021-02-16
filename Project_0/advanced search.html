@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Advanced Search</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="right">
+            <a href="index.html">Go Back</a>
+        </div>
+        <div class="center">
+            <h1>My Google Advanced Search Front End</h1>
+        </div>
+        <h3 class="left">Find pages with...</h3>
+        <form action="https://google.com/search">
+            <!-- I think I really should've used a table here, but at this point ¯\_(ツ)_/¯ -->
+            <div class="left">
+                <div class="vertical" id="adv_prompts">
+                    <div class = "advanced">all of these words:</div>
+                    <div class = "advanced">this exact word or phrase:</div>
+                    <div class = "advanced">any of these words:</div>
+                    <div class = "advanced">none of these words:</div>
+                </div>
+                <div class="vertical">
+                    <input class="advanced" autofocus="autofocus" type="text" name="as_q">
+                    <input class="advanced" type="text" name="as_epq">
+                    <input class="advanced" type="text" name="as_oq">
+                    <input class="advanced" type="text" name="as_eq">
+                </div>
+                <!-- This is for spacing (preventing boxes from running all the way right...a bit hacky, I know) -->
+                <div class="vertical"></div>
+            </div>
+            
+            <div class="center">
+                <input id="adv_sub_btn" type="submit" value="Advanced Search">
+            </div>
+            
+            <!-- <div class="vertical">
+                <h3>Find pages with...</h3>
+                <div class="left">
+                    All of these words: <input class="advanced" type="text" name="q">
+                </div>
+                <div class="left">
+                    This exact word or phrase: <input class="advanced" type="text" name="q">
+                </div>
+                <div class="left">
+                    Any of these words: <input class="advanced" type="text" name="q">
+                </div>
+                <div class="left">
+                    None of these words: <input class="advanced" type="text" name="q">
+                </div>
+            </div>
+            <div class="center">
+                <input type="submit" value="Advanced Search">
+            </div> -->
+        </form>
+    </body>
+</html>
