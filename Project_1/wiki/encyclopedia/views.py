@@ -10,8 +10,10 @@ def index(request):
 
 def entry_page(request, entry_name):
     
+    content = util.get_entry(entry_name)
+    content = util.md_to_html(content)
+
     return render(request, "encyclopedia/entry.html", {
         "name": entry_name,
-        # TODO: fix using .capitalize() (doesn't work for CSS, etc.)
-        "content": util.get_entry(entry_name.capitalize())
+        "content": content
     })
