@@ -41,8 +41,8 @@ def new_page(request):
 
             # Ensure entry doesn't exist already
             if title in util.list_entries():
-                # TODO: something better than this
-                # Did confirm the redirect works
+                # TODO: change this to an error message
+                # Did confirm the code/redirect works, though
                 return HttpResponseRedirect(reverse('index'))
 
             # Save new entry
