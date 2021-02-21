@@ -49,7 +49,7 @@ def new_page(request):
             util.save_entry(title, content)
 
             # Redirect
-            return HttpResponseRedirect(title)
+            return HttpResponseRedirect(reverse("entry", kwargs={'entry_name': title}))
         
         # Re-prompt user if form is invalid
         else:
