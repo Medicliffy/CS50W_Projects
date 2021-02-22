@@ -8,13 +8,5 @@
 {% endblock %}
 
 {% block body %}
-    
-    {% if not content %}
-        <h1>That page doesn't exist!</h1>
-        <!-- TODO: add option to create -->
-    {% else %}
-        <!-- TODO: replace with translated markdown -->
-        {{ content|safe }}
-    {% endif %}
-
+    {{ content|safe }}
 {% endblock %}

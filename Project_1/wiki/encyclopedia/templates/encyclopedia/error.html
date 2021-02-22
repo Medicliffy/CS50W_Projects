@@ -1,0 +1,17 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block body %}
+    <h2>{{ message }}</h2>
+
+    {% if allow_create %}
+        <p>Would you like to <a href="{% url new_page %}">create a new entry</a>?</p>
+        <!-- <p>Would you like to <a href="{% url new_page %}?title={{title}}">create a new entry</a>?</p> -->
+        <!-- TODO: add GET params with the title (to prefill form) -->
+    {% endif %}
+
+{% endblock %}

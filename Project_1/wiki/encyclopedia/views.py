@@ -13,6 +13,25 @@ def index(request):
 def entry_page(request, entry_name):
     
     content = util.get_entry(entry_name)
+
+    # Only for testing
+    # if not content:
+    #     return render(request, "encyclopedia/entry.html", {
+    #         "message": f'Unforunately no page exists for {entry_name}',
+    #         "title": "Page does not exist",
+    #         "name": entry_name,
+    #         "allow_create": True,
+    #         "content": "FAIL"
+    #     })
+    # Real code below
+    if not content:
+        return render(request, "encyclopedia/error.html", {
+            "message": f'Unforunately no page exists for {entry_name}',
+            "title": "Page does not exist",
+            "name": entry_name,
+            "allow_create": True,
+        })
+
     content = util.md_to_html(content)
 
     return render(request, "encyclopedia/entry.html", {
@@ -48,8 +67,9 @@ def new_page(request):
             # Save new entry
             util.save_entry(title, content)
 
-            # Redirect
-            return HttpResponseRedirect(reverse("entry", kwargs={'entry_name': title}))
+            # Redirect (both of these work, leaving both for my reference)
+            # return HttpResponseRedirect(reverse("entry", kwargs={'entry_name': title}))
+            return HttpResponseRedirect(reverse("entry", args=[title]))
         
         # Re-prompt user if form is invalid
         else:
@@ -57,7 +77,10 @@ def new_page(request):
                 "form": form
             })
     
+    # Get data to allow prefilling form with GET params
+    form = NewPageForm(request.GET)
+
     # Render blank page if request method isn't POST
     return render(request, "encyclopedia/new_page.html",{
-        "form": NewPageForm()
+        "form": form
     })
