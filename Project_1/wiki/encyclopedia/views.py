@@ -14,19 +14,9 @@ def entry_page(request, entry_name):
     
     content = util.get_entry(entry_name)
 
-    # Only for testing
-    # if not content:
-    #     return render(request, "encyclopedia/entry.html", {
-    #         "message": f'Unforunately no page exists for {entry_name}',
-    #         "title": "Page does not exist",
-    #         "name": entry_name,
-    #         "allow_create": True,
-    #         "content": "FAIL"
-    #     })
-    # Real code below
     if not content:
         return render(request, "encyclopedia/error.html", {
-            "message": f'Unforunately no page exists for {entry_name}',
+            "message": f'Unforunately no page exists for "{entry_name}"',
             "title": "Page does not exist",
             "name": entry_name,
             "allow_create": True,
@@ -77,10 +67,18 @@ def new_page(request):
                 "form": form
             })
     
-    # Get data to allow prefilling form with GET params
-    form = NewPageForm(request.GET)
+    # Render blank form if empty GET field
+    if request.GET == {}:
+        return render(request, "encyclopedia/new_page.html",{
+            "form": NewPageForm()
+        })
+    else:
+        # Get data to allow prefilling form with GET params
+        form = NewPageForm(request.GET)
 
-    # Render blank page if request method isn't POST
-    return render(request, "encyclopedia/new_page.html",{
-        "form": form
-    })
+        # Render blank page if request method isn't POST
+        # TODO: Make this ignore errors for the first load (having a form with data in it creates the error)
+        # Will be able to delete if/else once resolved (it fixes displaying "this field is required" all times the form is loaded...)
+        return render(request, "encyclopedia/new_page.html",{
+            "form": form
+        })
