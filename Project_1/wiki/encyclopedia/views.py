@@ -16,7 +16,7 @@ def entry_page(request, entry_name):
 
     if not content:
         return render(request, "encyclopedia/error.html", {
-            "message": f'Unforunately no page exists for "{entry_name}"',
+            "message": f'Unforunately no entry was found for "{entry_name}"',
             "title": "Page does not exist",
             "name": entry_name,
             "allow_create": True,
@@ -82,3 +82,41 @@ def new_page(request):
         return render(request, "encyclopedia/new_page.html",{
             "form": form
         })
+
+def search(request):
+
+    params = request.GET
+
+    # Redirect to index if no get parameters are specified
+    if params == {}:
+        return HttpResponseRedirect(reverse("index"))
+    
+    term = params.get('q')
+    entries = util.list_entries()
+    lower_entries = list(map(str.lower, entries))
+
+    if term in entries:
+        return HttpResponseRedirect(reverse("entry", args=[term]))
+    elif term.lower() in lower_entries:
+        # Also redirect cases that don't match capitalization
+        term = entries[lower_entries.index(term.lower())]
+        return HttpResponseRedirect(reverse("entry", args=[term]))
+    else:
+        # Return list of entries with search as a subterm. Ignore capitalization.
+
+        matching_entries = [x for x in entries if term.lower() in x.lower()]
+
+        if matching_entries == []:
+            # Render error page if no matching entries are found
+            return render(request, "encyclopedia/error.html", {
+                "message": f'No matching entries were found for your search "{term}"',
+                "title": "No entries found",
+                "name": term,
+                "allow_create": False,
+            })
+        else:
+            # Render page listing potential matches
+            return render(request, "encyclopedia/search.html",{
+                "results": matching_entries,
+                "search_term": term,
+            })
