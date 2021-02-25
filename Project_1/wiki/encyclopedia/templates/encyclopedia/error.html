@@ -11,6 +11,10 @@
     {% if allow_create %}
         <p>Would you like to <a href="{% url 'new_page' %}?title={{name}}">create a new entry</a>?</p>
     {% endif %}
+    
+    {% if already_exists %}
+        <p>View <a href="{% url 'entry' name %}">current entry</a>.</p>
+    {% endif %}
 
     <p><a href="{% url 'index' %}"">Return to home page</a></p>
 

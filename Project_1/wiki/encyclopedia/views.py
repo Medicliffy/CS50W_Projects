@@ -50,9 +50,14 @@ def new_page(request):
 
             # Ensure entry doesn't exist already
             if title in util.list_entries():
-                # TODO: change this to an error message
-                # Did confirm the code/redirect works, though
-                return HttpResponseRedirect(reverse('index'))
+                
+                return render(request, "encyclopedia/error.html", {
+                    "message": f'An entry already exists for "{title}"',
+                    "title": "Page already exists",
+                    "name": title,
+                    "allow_create": False,
+                    "already_exists": True,
+                })
 
             # Save new entry
             util.save_entry(title, content)
@@ -120,3 +125,7 @@ def search(request):
                 "results": matching_entries,
                 "search_term": term,
             })
+
+def edit_entry(request, entry_name):
+    # TODO
+    pass
