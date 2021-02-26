@@ -3,6 +3,8 @@ from django import forms
 
 from . import util
 
+from random import choice as random_choice
+
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -171,3 +173,8 @@ def edit_entry(request, entry_name):
         "form": form,
         "title": entry_name
     })
+
+
+def random_entry(request):
+    page = random_choice(util.list_entries())
+    return HttpResponseRedirect(reverse("entry", args=[page]))
