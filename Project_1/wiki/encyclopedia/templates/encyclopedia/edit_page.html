@@ -1,0 +1,7 @@
+{% extends "encyclopedia/edit_layout.html" %}
+
+{% block title %}
+    Edit {{title}}
+{% endblock %}
+
+{% block form_action %}"{% url 'edit' title %}"{% endblock %}

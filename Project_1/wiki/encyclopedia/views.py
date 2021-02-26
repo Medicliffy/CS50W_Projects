@@ -72,21 +72,10 @@ def new_page(request):
                 "form": form
             })
     
-    # Render blank form if empty GET field
-    if request.GET == {}:
-        return render(request, "encyclopedia/new_page.html",{
-            "form": NewPageForm()
-        })
-    else:
-        # Get data to allow prefilling form with GET params
-        form = NewPageForm(request.GET)
+    return render(request, "encyclopedia/new_page.html", {
+        "form": NewPageForm(initial=request.GET)
+    })
 
-        # Render blank page if request method isn't POST
-        # TODO: Make this ignore errors for the first load (having a form with data in it creates the error)
-        # Will be able to delete if/else once resolved (it fixes displaying "this field is required" all times the form is loaded...)
-        return render(request, "encyclopedia/new_page.html",{
-            "form": form
-        })
 
 def search(request):
 
@@ -127,5 +116,58 @@ def search(request):
             })
 
 def edit_entry(request, entry_name):
-    # TODO
-    pass
+
+    # It would be more efficient to write a funciton and share w/ new page logic
+    # But, this will get me processing through form management more ¯\_(ツ)_/¯
+
+    if request.method=='POST':
+        
+        # Get data that user submitted
+        form = NewPageForm(request.POST)
+
+        # Check if form is valid
+        if form.is_valid():
+            
+            title = form.cleaned_data['title']
+            content = form.cleaned_data['content']
+
+            # Don't allow editing or creating other pages
+            if not title == entry_name:
+                
+                if title in util.list_entries():
+                    allow_create = False
+                    already_exists = True
+                    text = "edit"
+                else:
+                    allow_create = True
+                    already_exists = False
+                    text = "create"
+                
+                return render(request, "encyclopedia/error.html",{
+                    "message": f'Unable to {text} "{title}" from the page for "{entry_name}"',
+                    "title": "Wrong page!",
+                    "name": title,
+                    "allow_create": allow_create,
+                    "already_exists": already_exists,
+                })
+
+            # Save modified entry
+            util.save_entry(title, content)
+
+            # Redirect to edited page
+            return HttpResponseRedirect(reverse("entry", args=[title]))
+        else:
+            # Reprompt if input is invalid
+            return render(request, "encyclopedia/edit_page.html", {
+                "form": form,
+                "title": entry_name
+            })
+        
+    # Get existing page data & initialize form
+    current_entry = {'title': entry_name, 'content': util.get_entry(entry_name)}
+    form = NewPageForm(initial=current_entry)
+
+    return render(request, "encyclopedia/edit_page.html", {
+        "form": form,
+        "title": entry_name
+    })
