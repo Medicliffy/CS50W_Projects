@@ -17,6 +17,10 @@ textarea {
     width: 80%;
 }
 
+table {
+    width: 100%;
+}
+
 .main {
     padding: 10px;
 }

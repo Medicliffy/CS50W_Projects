@@ -3,7 +3,13 @@
 {% block body %}
     <form action={% block form_action %}{% endblock %} method="POST">
         {% csrf_token %}
-        {{ form }}
-        <input type='submit' value='save'>
+        <!-- <table class="test" style="width: 100%"> -->
+        <table>
+            {{ form.as_table }}
+            <tr>
+                <td></td>
+                <td><input type='submit' value='save'></td>
+            </tr>
+        </table>
     </form>
 {% endblock %}
