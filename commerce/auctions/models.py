@@ -17,7 +17,6 @@ class User(AbstractUser):
 
 class Category(models.Model):
     title = models.CharField(max_length=64, unique=True, db_index=True)
-    # description = models.TextField() # TODO: maybe delete?
 
     def __str__(self):
         return f"{self.title}"
