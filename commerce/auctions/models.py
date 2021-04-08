@@ -5,7 +5,7 @@ from django.db import models
 from datetime import datetime
 
 
-Max_bid_digits = 9
+max_bid_digits = 9
 
 def get_sentinel_user():
     return get_user_model().objects.get_or_create(username='deleted')[0]
@@ -22,28 +22,29 @@ class Category(models.Model):
 
 class Listing(models.Model):
     
+    # TODO: think about/account for timezones (created_at, opens_at, closes_at)
+
     # Meta
     creator = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
-    # TODO: account for timezones
     created_at = models.DateTimeField(default=datetime.now)
-    auction_opens_at = models.DateTimeField(default=datetime.now)
-    auction_closes_at = models.DateTimeField()
     
-    # About
+    # Content
     title = models.CharField(max_length=64, db_index=True)
     description = models.TextField()
     image_url = models.URLField()
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="listings")
-    # TODO: move to bid class?...probably not
-    starting_bid = models.DecimalField(max_digits=Max_bid_digits, decimal_places=2)
+    starting_bid = models.DecimalField(max_digits=max_bid_digits, decimal_places=2)
     
+    # Other
+    opens_at = models.DateTimeField(default=datetime.now)
+    closes_at = models.DateTimeField()
     users_watching = models.ManyToManyField(User, blank=True, related_name="watchlist")
 
 
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
-    amount = models.DecimalField(max_digits=Max_bid_digits, decimal_places=2)
+    amount = models.DecimalField(max_digits=max_bid_digits, decimal_places=2)
     time = models.DateTimeField(default=datetime.now)
 
 
@@ -51,3 +52,4 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
     content = models.TextField()
+    time = models.DateTimeField(default=datetime.now)
