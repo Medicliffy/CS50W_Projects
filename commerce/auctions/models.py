@@ -19,6 +19,9 @@ class Category(models.Model):
     title = models.CharField(max_length=64, unique=True, db_index=True)
     # description = models.TextField() # TODO: maybe delete?
 
+    def __str__(self):
+        return f"{self.title}"
+
 
 class Listing(models.Model):
     
@@ -40,6 +43,9 @@ class Listing(models.Model):
     closes_at = models.DateTimeField()
     users_watching = models.ManyToManyField(User, blank=True, related_name="watchlist")
 
+    def __str__(self):
+        return f"{self.title}"
+
 
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
@@ -47,9 +53,15 @@ class Bid(models.Model):
     amount = models.DecimalField(max_digits=max_bid_digits, decimal_places=2)
     time = models.DateTimeField(default=datetime.now)
 
+    def __str__(self):
+        return f"{self.user} bids {self.amount} for {self.listing}"
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
     content = models.TextField()
     time = models.DateTimeField(default=datetime.now)
+
+    def __str__(self):
+        return f"{self.user} comment on {self.listing}"
