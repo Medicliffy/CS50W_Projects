@@ -1,11 +1,11 @@
+from datetime import datetime
+
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from datetime import datetime
 
-
-max_bid_digits = 9
+MAX_BID_DIGITS = 9
 
 def get_sentinel_user():
     return get_user_model().objects.get_or_create(username='deleted')[0]
@@ -23,20 +23,21 @@ class Category(models.Model):
 
 
 class Listing(models.Model):
-    
+
     # TODO: think about/account for timezones (created_at, opens_at, closes_at)
 
     # Meta
     creator = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
     created_at = models.DateTimeField(default=datetime.now)
-    
+
     # Content
     title = models.CharField(max_length=64, db_index=True)
     description = models.TextField()
     image_url = models.URLField()
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="listings")
-    starting_bid = models.DecimalField(max_digits=max_bid_digits, decimal_places=2)
-    
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, null=True, related_name="listings")
+    starting_bid = models.DecimalField(max_digits=MAX_BID_DIGITS, decimal_places=2)
+
     # Other
     opens_at = models.DateTimeField(default=datetime.now)
     closes_at = models.DateTimeField()
@@ -49,8 +50,11 @@ class Listing(models.Model):
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
-    amount = models.DecimalField(max_digits=max_bid_digits, decimal_places=2)
+    amount = models.DecimalField(max_digits=MAX_BID_DIGITS, decimal_places=2)
     time = models.DateTimeField(default=datetime.now)
+
+    class Meta():
+        get_latest_by = 'amount'
 
     def __str__(self):
         return f"{self.user} bids {self.amount} for {self.listing}"

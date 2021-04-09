@@ -1,5 +1,27 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    TODO
+    <h2>Item: {{ listing.title }}</h2>
+
+    <img src="{{ listing.image_url }}" alt="picture" height=300>
+
+    <h4>Details:</h4>
+    <ul>
+        <li>Listed by: {{ listing.creator }}</li>
+        <li>Category: {{ listing.category|default_if_none:"No category given." }} </li>
+        <li>Description: {{ listing.description }}</li>
+    </ul>
+
+    <h4>Bidding</h4>
+    {% if listing.bids.latest %}
+        <p>current bid: {{ listing.bids.latest.amount }}</p>
+    {% else %}
+        <p>No bids yet! Starting bid: {{ listing.starting_bid }}</p>
+    {% endif %}
+
+    TODO: bidding form
+    
+    <h4>Comments</h4>
+    TODO: comment (form & display)
+
 {% endblock %}
